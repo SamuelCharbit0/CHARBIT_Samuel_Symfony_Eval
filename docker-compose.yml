@@ -1,0 +1,45 @@
+services:
+  php:
+    build:
+      context: ./docker/php
+    container_name: sf_php
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - sfnet
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: sf_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./app:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    networks:
+      - sfnet
+
+  db:
+    image: mysql:8.0
+    container_name: sf_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - sfnet
+
+volumes:
+  db_data:
+
+networks:
+  sfnet:

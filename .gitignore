@@ -1,0 +1,3 @@
+# Ignorer les dossiers var et vendor dans le dossier app
+/app/var/
+/app/vendor/
