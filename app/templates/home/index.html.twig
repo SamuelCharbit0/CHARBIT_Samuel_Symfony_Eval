@@ -1,0 +1,10 @@
+{# templates/home/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<h1>Bienvenue sur ton application Symfony !</h1>
+<p>Tu es connecté : {{ app.user ? app.user.email : 'Invité' }}</p>
+<a href="{{ path('note_index') }}">Voir les Notes</a>
+{% endblock %}
