@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use App\Security\LoginFormAuthenticator;
 
 class RegistrationController extends AbstractController
 {
@@ -19,11 +17,14 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $em,
-        UserAuthenticatorInterface $userAuthenticator,
-        LoginFormAuthenticator $authenticator
+        EntityManagerInterface $em
     ): Response
     {
+        // Redirection si l'utilisateur est déjà connecté
+        if ($this->getUser()) {
+            return $this->redirectToRoute('note_index');
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -43,12 +44,8 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            // Connexion automatique après inscription
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
+            // Redirection vers la page note après inscription
+            return $this->redirectToRoute('note_index');
         }
 
         return $this->render('registration/register.html.twig', [

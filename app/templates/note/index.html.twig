@@ -5,6 +5,14 @@
 {% block body %}
     <h1>Note index</h1>
 
+    {# Bouton déconnexion si connecté #}
+    {% if app.user %}
+        <p>
+            Connecté en tant que {{ app.user.email }}.
+            <a href="{{ path('app_logout') }}">Se déconnecter</a>
+        </p>
+    {% endif %}
+
     <table class="table">
         <thead>
             <tr>
@@ -42,4 +50,9 @@
     </table>
 
     <a href="{{ path('note_new') }}">Create new</a>
+
+    {# Lien vers l’accueil #}
+    <p class="mt-3">
+        <a href="{{ path('home') }}">Retour à l’accueil</a>
+    </p>
 {% endblock %}
