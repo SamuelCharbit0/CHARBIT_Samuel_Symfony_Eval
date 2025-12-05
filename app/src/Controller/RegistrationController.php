@@ -10,18 +10,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use App\Security\LoginFormAuthenticator;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $em,
+        UserAuthenticatorInterface $userAuthenticator,
+        LoginFormAuthenticator $authenticator
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // hash du mot de passe
+            // Hash du mot de passe
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
@@ -29,14 +37,18 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // rôle par défaut
+            // Rôle par défaut
             $user->setRoles(['ROLE_USER']);
 
             $em->persist($user);
             $em->flush();
 
-            // connexion automatique possible plus tard si tu veux
-            return $this->redirectToRoute('app_login');
+            // Connexion automatique après inscription
+            return $userAuthenticator->authenticateUser(
+                $user,
+                $authenticator,
+                $request
+            );
         }
 
         return $this->render('registration/register.html.twig', [

@@ -22,6 +22,7 @@ class NoteController extends AbstractController
         $user = $this->getUser();
 
         if (!$user) {
+            // si jamais quelqu'un accède sans être connecté
             return $this->redirectToRoute('app_login');
         }
 
