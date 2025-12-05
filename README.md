@@ -1,6 +1,6 @@
-APPLICATION SYMFONY DE GESTION DE NOTES (AVEC DOCKER)
+**APPLICATION SYMFONY DE GESTION DE NOTES (AVEC DOCKER)**
 
-PRESENTATION DU PROJET
+**PRESENTATION DU PROJET**
 
 Cette application est une application de gestion de notes développée avec Symfony, conçue pour être exécutée via Docker. Elle permet aux utilisateurs de :
 
@@ -12,7 +12,12 @@ Cette application est une application de gestion de notes développée avec Symf
 
 Le projet est pensé pour être simple, pédagogique et facilement exécutable sur n’importe quel environnement grâce à Docker.
 
-COMMANDES UTILES POUR DOCKER
+**ARCHITECTURE DOCKER**
+
+Le projet utilise Docker Compose pour gérer l’environnement :
+<img width="935" height="210" alt="image" src="https://github.com/user-attachments/assets/87c29dd5-391c-451e-8482-d846561b5076" />
+
+**COMMANDES UTILES POUR DOCKER**
 
 - Démarrer les conteneurs :
   - docker compose up -d
@@ -29,9 +34,9 @@ COMMANDES UTILES POUR DOCKER
 - Se connecter à la base de données MySQL :
   - docker compose exec sf_db mysql -uroot -p
 
-FONCTIONNALITES PRINCIPALES
+**FONCTIONNALITES PRINCIPALES**
 
-1. Authentification
+**1. Authentification**
 
 - Inscription (/register) :
   - Création d’un compte utilisateur.
@@ -50,7 +55,7 @@ FONCTIONNALITES PRINCIPALES
 - Session persistante :
   - L’utilisateur reste connecté tant qu’il ne se déconnecte pas.
 
- 2. Gestion des notes
+ **2. Gestion des notes**
 
 Routes principales gérées par NoteController :
 
@@ -59,7 +64,7 @@ Routes principales gérées par NoteController :
 - Les actions éditer/supprimer sont contrôlées via is_granted.
 - Les pages affichent un bouton de déconnexion et un lien vers la page d’accueil si nécessaire.
 
- 3. Pages principales
+ **3. Pages principales**
 
 - Page d’accueil (/) :
   - Affiche login/register si non connecté.
@@ -79,7 +84,7 @@ Routes principales gérées par NoteController :
   - Gestion complète des notes selon permissions.
   - Boutons création, édition, suppression, et visualisation.
 
- 4. Rôles et permissions
+ **4. Rôles et permissions**
 
 - ROLE_USER :
   - Accès complet à ses propres notes.
@@ -90,7 +95,7 @@ Routes principales gérées par NoteController :
 
 - Les redirections et autorisations sont gérées via security.yaml et les annotations dans les contrôleurs.
 
- 5. Création d’un compte admin
+ **5. Création d’un compte admin**
 
 - Un script est fourni pour créer un compte admin :
   - create_admin_sql.php
@@ -98,13 +103,13 @@ Routes principales gérées par NoteController :
   - Nécessite de fournir email, mot de passe et attribue automatiquement le rôle ROLE_ADMIN.
   - J'ai laissé ce fichier pour que vous puissiez voir qu'on peut créer un admin.
 
- 6. Structure des fichiers importants
+ **6. Structure des fichiers importants**
 <img width="367" height="522" alt="image" src="https://github.com/user-attachments/assets/d3a33464-411a-4416-bd09-39efa3a6c9e4" />
 
 - Les pages Twig utilisent base.html.twig comme layout.
 - Les boutons et liens sont affichés dynamiquement selon l’état de connexion (app.user).
 
- 7. Sécurité
+ **7. Sécurité**
 
 - Hashage des mots de passe :
   - via UserPasswordHasherInterface lors de l’inscription.
@@ -124,7 +129,7 @@ Routes principales gérées par NoteController :
   - Un administrateur (ROLE_ADMIN) peut modifier toutes les notes.
   - Utilisé dans Twig avec is_granted('edit', note).
 
- 8. Expérience utilisateur
+ **8. Expérience utilisateur**
 
 Non connecté :
 - Accès / : voir login/register.
@@ -139,7 +144,7 @@ Connecté :
 Admin :
 - Peut voir, modifier et supprimer toutes les notes et possibilité de déconnexion.
 
- 9. Points de suivi
+ **9. Points de suivi**
 
 - L’application fonctionne entièrement sous Docker.
 - Scripts et fichiers sont laissés visibles (ex : create_admin_sql.php) sauf /vendor/ et /var/ comme vous l'avez demandé.
