@@ -1,38 +1,40 @@
 <?php
 
-namespace App\Security;
+namespace App\Security\Voter;
 
 use App\Entity\Note;
-use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class NoteVoter extends Voter
+final class NoteVoter extends Voter
 {
-    const VIEW = 'view';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
+    public const VIEW = 'NOTE_VIEW';
+    public const EDIT = 'NOTE_EDIT';
 
-    protected function supports(string $attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])
+        return in_array($attribute, [self::VIEW, self::EDIT])
             && $subject instanceof Note;
     }
 
-    protected function voteOnAttribute(string $attribute, $note, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (!$user instanceof UserInterface) {
             return false;
         }
 
-        // ROLE_ADMIN peut tout faire
+        /** @var Note $note */
+        $note = $subject;
+
+        // Admin peut tout faire
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return true;
         }
 
-        // chaque utilisateur peut gérer ses notes
+        // Sinon : l'utilisateur doit être le propriétaire
         return $note->getUser() === $user;
     }
 }

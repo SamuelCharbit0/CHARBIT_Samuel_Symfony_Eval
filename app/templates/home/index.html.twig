@@ -1,10 +1,16 @@
-{# templates/home/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<h1>Bienvenue sur ton application Symfony !</h1>
-<p>Tu es connecté : {{ app.user ? app.user.email : 'Invité' }}</p>
-<a href="{{ path('note_index') }}">Voir les Notes</a>
+    <h1>Bienvenue sur l'application de notes</h1>
+
+    {% if app.user %}
+        <p>Bonjour {{ app.user.email }} ! <a href="{{ path('note_index') }}">Voir vos notes</a></p>
+    {% else %}
+        <p>
+            <a href="{{ path('app_login') }}">Se connecter</a> ou 
+            <a href="{{ path('app_register') }}">S'inscrire</a>
+        </p>
+    {% endif %}
 {% endblock %}

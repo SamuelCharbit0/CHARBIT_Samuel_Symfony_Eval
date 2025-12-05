@@ -12,7 +12,7 @@
                 <th>Title</th>
                 <th>Content</th>
                 <th>CreatedAt</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,8 +23,14 @@
                 <td>{{ note.content }}</td>
                 <td>{{ note.createdAt ? note.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_note_show', {'id': note.id}) }}">show</a>
-                    <a href="{{ path('app_note_edit', {'id': note.id}) }}">edit</a>
+                    <a href="{{ path('note_show', {'id': note.id}) }}">show</a>
+                    {% if is_granted('edit', note) %}
+                        <a href="{{ path('note_edit', {'id': note.id}) }}">edit</a>
+                        <form method="post" action="{{ path('note_delete', {'id': note.id}) }}" style="display:inline-block;" onsubmit="return confirm('Are you sure?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
+                            <button class="btn btn-link">delete</button>
+                        </form>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -35,5 +41,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_note_new') }}">Create new</a>
+    <a href="{{ path('note_new') }}">Create new</a>
 {% endblock %}

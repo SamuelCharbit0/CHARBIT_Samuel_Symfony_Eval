@@ -16,10 +16,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class NoteController extends AbstractController
 {
     #[Route('/', name: 'note_index', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(NoteRepository $noteRepository): Response
     {
-        // Si admin, voir toutes les notes, sinon seulement ses notes
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             $notes = $noteRepository->findAll();
         } else {
@@ -32,7 +37,7 @@ class NoteController extends AbstractController
     }
 
     #[Route('/new', name: 'note_new', methods: ['GET','POST'])]
-    #[IsGranted('ROLE_USER')] // accessible uniquement aux utilisateurs connectés
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $note = new Note();
@@ -40,7 +45,7 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $note->setUser($this->getUser()); // associe la note à l'utilisateur connecté
+            $note->setUser($this->getUser());
             $note->setCreatedAt(new \DateTimeImmutable());
             $em->persist($note);
             $em->flush();
@@ -58,7 +63,8 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function show(Note $note): Response
     {
-        $this->denyAccessUnlessGranted('view', $note);
+        $this->denyAccessUnlessGranted('NOTE_VIEW', $note);
+
         return $this->render('note/show.html.twig', [
             'note' => $note,
         ]);
@@ -68,13 +74,13 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('edit', $note);
+        $this->denyAccessUnlessGranted('NOTE_EDIT', $note);
+
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-
             return $this->redirectToRoute('note_index');
         }
 
@@ -88,7 +94,7 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('delete', $note);
+        $this->denyAccessUnlessGranted('NOTE_EDIT', $note);
 
         if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
             $em->remove($note);
