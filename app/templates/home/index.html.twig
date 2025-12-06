@@ -6,19 +6,27 @@
 <div class="text-center mt-5">
 
     {% if app.user %}
-        <h1 class="mb-4">Bienvenue sur l'application de gestion de notes {{ app.user.email }} !</h1>
+        <h1 class="mb-4">Bienvenue sur l'application de Gestion de Notes {{ app.user.email }} !</h1>
 
-        <p class="lead fs-4 mb-4">
-            Vous êtes connecté. Accédez directement à vos notes :
-        </p>
-
-        <a href="{{ path('note_index') }}" class="btn btn-primary btn-lg">
-            Voir mes notes
-        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <p class="lead fs-4 mb-4">
+                Vous êtes connecté. Accédez directement aux notes des utilisateurs :
+            </p>
+            <a href="{{ path('note_index') }}" class="btn btn-primary btn-lg">
+                Voir les notes
+            </a>
+        {% else %}
+            <p class="lead fs-4 mb-4">
+                Vous êtes connecté. Accédez directement à vos notes :
+            </p>
+            <a href="{{ path('note_index') }}" class="btn btn-primary btn-lg">
+                Voir mes notes
+            </a>
+        {% endif %}
 
     {% else %}
 
-        <h1 class="mb-4">Bienvenue sur l'application de gestion de notes</h1>
+        <h1 class="mb-4">Bienvenue sur l'application de Gestion de Notes</h1>
 
         <p class="lead mb-4 fs-4">
             Créez un compte ou connectez-vous pour accéder à vos notes.
