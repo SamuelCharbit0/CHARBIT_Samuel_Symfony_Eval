@@ -17,6 +17,14 @@ Le projet est pensé pour être simple, pédagogique et facilement exécutable s
 Le projet utilise Docker Compose pour gérer l’environnement :
 <img width="935" height="210" alt="image" src="https://github.com/user-attachments/assets/87c29dd5-391c-451e-8482-d846561b5076" />
 
+**TECHNOLOGIES / INTERFACE**
+
+- Symfony 6 pour la structure backend.
+- Doctrine ORM pour la gestion de la base de données.
+- MySQL géré via Docker.
+- Bootstrap 5 pour un design simple et agréable des formulaires, tableaux et boutons.
+- Docker pour l’environnement complet.
+
 **COMMANDES UTILES POUR DOCKER**
 
 - Démarrer les conteneurs :
