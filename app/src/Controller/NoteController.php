@@ -22,7 +22,6 @@ class NoteController extends AbstractController
         $user = $this->getUser();
 
         if (!$user) {
-            // si jamais quelqu'un accède sans être connecté
             return $this->redirectToRoute('app_login');
         }
 
@@ -64,7 +63,7 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function show(Note $note): Response
     {
-        $this->denyAccessUnlessGranted('NOTE_VIEW', $note);
+        $this->denyAccessUnlessGranted('view', $note);
 
         return $this->render('note/show.html.twig', [
             'note' => $note,
@@ -75,7 +74,7 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('NOTE_EDIT', $note);
+        $this->denyAccessUnlessGranted('edit', $note);
 
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
@@ -95,7 +94,7 @@ class NoteController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('NOTE_EDIT', $note);
+        $this->denyAccessUnlessGranted('edit', $note);
 
         if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
             $em->remove($note);

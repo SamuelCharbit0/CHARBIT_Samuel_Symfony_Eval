@@ -3,15 +3,38 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<h1>Bienvenue sur l'application de notes</h1>
+<div class="text-center mt-5">
 
-{% if app.user %}
-    <p>
-        Vous êtes connecté en tant que {{ app.user.email }}. 
-        <a href="{{ path('note_index') }}">Voir vos notes</a> |
-        <a href="{{ path('app_logout') }}">Se déconnecter</a>
-    </p>
-{% else %}
-    <p><a href="{{ path('app_login') }}">Se connecter</a> ou <a href="{{ path('app_register') }}">Créer un compte</a></p>
-{% endif %}
+    {% if app.user %}
+        <h1 class="mb-4">Bienvenue sur l'application de gestion de notes {{ app.user.email }} !</h1>
+
+        <p class="lead fs-4 mb-4">
+            Vous êtes connecté. Accédez directement à vos notes :
+        </p>
+
+        <a href="{{ path('note_index') }}" class="btn btn-primary btn-lg">
+            Voir mes notes
+        </a>
+
+    {% else %}
+
+        <h1 class="mb-4">Bienvenue sur l'application de gestion de notes</h1>
+
+        <p class="lead mb-4 fs-4">
+            Créez un compte ou connectez-vous pour accéder à vos notes.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ path('app_register') }}" class="btn btn-success btn-lg">
+                Créer un compte
+            </a>
+
+            <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">
+                Se connecter
+            </a>
+        </div>
+
+    {% endif %}
+
+</div>
 {% endblock %}
